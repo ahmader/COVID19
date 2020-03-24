@@ -2,6 +2,8 @@ import './src/sketch';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
+// import 'ionicons';
+// require('ionicons');
 
 // import p5 from 'p5';
 // let arr = [];

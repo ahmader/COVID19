@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Moire Patterns</title>
+        <title><%=APP_TITLE%></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="ماذا يعني إنحسار أو إنتشار فايروس كارونا، ولمذا ينصح بالعزل.">
 				
@@ -23,7 +23,7 @@
         <link rel="canonical" href="https://covid19.talents.sa/">
         <meta property="og:url" content="https://covid19.talents.sa/">
         
-        <meta property="og:image" content="talents-banner.png">
+        <meta property="og:image" content="<%= require('./assets/images/talents-banner.png').default %>">
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="630">
         <meta property="og:image:type" content="image/png">
@@ -32,13 +32,71 @@
     </head>
     <body>
         <div id="myCanvas" class="container p-0"></div>
+
+        <div class="container p-0 credit">
+            <div class="bg-dark d-flex xflex-column justify-content-between align-items-center pb-2 px-2">
+                <div class="ml-auto small text-muted" dir="ltr">
+                    version <%=VERSION%>
+                </div>
+                <span class="small text-muted ml-1">نصيحة من: </span>
+                <a href="https://talents.sa" class="text-light">شركة المواهب الوطنية</a>
+            </div>
+        </div>
+        <!-- 
+            
+
+            cc5 = p5.createA('https://talents.sa', 'شركة المواهب الوطنية');
+            cc5.elt.className = 'text-light';
+            cc5.elt.style.fontFamily = 'Tahoma';
+            cc5.elt.dir = 'ltr';
+            cc5.parent(cc7);
+         -->
+
+        <div class="container d-flex flex-column flex-md-row bg-light">
+            <div class="col-12 col-md-4 text-center py-4 d-flex flex-column align-items-center">
+                <a
+                    href="https://twitter.com/intent/tweet?button_hashtag=فهمت_التباعد&ref_src=twsrc%5Etfw"
+                    class="twitter-hashtag-button"
+                    data-show-count="true"
+                    data-lang="ar"
+                    data-size="large"
+                >Tweet #فهمت_التباعد2</a>
+                <div class="small my-4">---- أو شارك الصفحة ----</div>
+                <a href="whatsapp://send?text=https://covid19.talents.sa/" class="btn btn-sm btn-link">
+                    WhatsApp
+                </a>
+                <a href="#" dir="ltr" class="btn btn-sm btn-link disabled">others...</a>
+                <img src="<%= require('./assets/images/talents_logo.gif').default %>"/>
+            </div>
+            <div class="col-12 col-md-8">
+                <a
+                    href="https://twitter.com/TalentsCenter/lists/Covid19?ref_src=twsrc%5Etfw"
+                    class="twitter-timeline"
+                    data-show-count="true"
+                    data-lang="ar"
+                    data-size="large"
+                >
+
+                </a>
+            </div>
+        </div>
+        <div class=" py-4 text-muted text-center" dir="ltr">
+            <!-- coded with ❤️ by @ahmader -->
+            <small>Made with</small> <ion-icon name="heart"></ion-icon> <small>in</small><br><span class="flag">🇸🇦</span> <strong>Saudi</strong> <span class="flag">🇸🇦</span><br><ion-icon name="code"></ion-icon> <span class="small"> by @ahmader</span>
+        </div>
     </body>
+
+    <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+
+    
+    <!-- Twitter -->
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-32584574-8"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'UA-32584574-8');
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-32584574-8');    
     </script>
 </html>

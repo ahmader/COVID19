@@ -1,6 +1,6 @@
 {
   "name": "covid19",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "description": "Showcase for social distance",
   "main": "index.js",
   "repository": "https://github.com/NationalTalentS/COVID19",
@@ -24,6 +24,7 @@
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.19.0",
+    "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.0.0",
     "style-loader": "^1.1.3",
     "terser-webpack-plugin": "^2.3.5",
