@@ -20,6 +20,12 @@ let logo;
 let logoAnim;
 let statCanv;
 
+const boardH = 100;
+const boardW = 100;
+// const boardX = 150;
+const boardY = 150;
+
+
 let cc3;
 let cc4;
 
@@ -176,11 +182,12 @@ const sketch = p5 => {
     // setting the particle in motion.
     moveParticle() {
       if (this.isDead) return;
-      if ( stopMoving && ( !this.isSick ) ) return;
+      // if ((stopSick && (!this.isSick || !this.isInfected)) || (stopMoving && !(this.isSick || this.isInfected))) return;
+      if ((stopMoving && !(this.isSick))) return;
 
       if (this.x < 80 || this.x > p5.width - 100) this.xSpeed *= -1;
       if (this.y < 80 || this.y > p5.height - 100) this.ySpeed *= -1;
-
+      finished=false;
       if (finished || this.isSick || (stopSick && (this.isInfected))) {
         if (this.room === -1) {
           const freeRoom = rooms.findIndex(r => r.busy === false);
@@ -189,7 +196,7 @@ const sketch = p5 => {
             // this.x = (width - 100 ) - rooms[freeRoom].x; //width - 50;
             // this.y = p5.height - rooms[freeRoom].y - 100; //height - 50;
             this.x = (p5.width - 100) + rooms[freeRoom].x; // width - 50;
-            this.y = (p5.height - 100) + rooms[freeRoom].y; // height - 50;
+            this.y = (p5.height - boardY) + rooms[freeRoom].y; // height - 50;
             this.room = freeRoom;
             this.xSpeed = 0;
             this.ySpeed = 0;
@@ -497,8 +504,47 @@ const sketch = p5 => {
       return l;
     });
 
+    // statCanv.fill(red[0], red[1], red[2]);
+    // statCanv.textSize(60);
+    // if (!stopMoving) {
+    //   statCanv.text('🤚🏻', statCanv.width - 45, statCanv.height - 60);
+    //   statCanv.textSize(15);
+    //   statCanv.text('حظر تجول', statCanv.width - 45, statCanv.height - 65);
+
+    // } else {
+    //   statCanv.text('🚷', statCanv.width - 45, statCanv.height - 70);
+    // }
+
+    statCanv.textSize(10);
+    statCanv.text('الحجر الصحي', 65, statCanv.height - 20);
+    statCanv.textSize(30);
+    statCanv.text('🛏', 20, statCanv.height - 15);
 
     p5.image(statCanv, p5.width - statCanv.width, 0);
+
+
+    const roomW = 20;
+
+    p5.fill('rgba(255,255,255,0)');
+    p5.rect(p5.width - boardW, p5.height - (boardY), boardW, boardW);
+    p5.stroke('rgba(0, 255, 0 , .2)');
+    for (let yyy = 0; yyy < 5; yyy++) {
+      for (let xxx = 0; xxx < 5; xxx++) {
+        p5.rect(p5.width - boardW + (roomW * xxx), p5.height - (boardY) + (roomW * yyy), roomW, roomW);
+      }
+    }
+
+    if (!finished) {
+      p5.fill(red[0], red[1], red[2]);
+      p5.textSize(60);
+      if (!stopMoving) {
+        p5.text('🤚🏻', 10, p5.height / 2);
+        p5.textSize(15);
+        p5.text('حظر تجول', 10, p5.height / 2 + 20);
+      } else {
+        p5.text('🚷', 10, p5.height / 2);
+      }
+    }
   }
 
 
@@ -530,6 +576,9 @@ const sketch = p5 => {
       people = Math.round(p5.windowWidth / 6);
     }
 
+    if (people < 80) {
+      people = 80;
+    }
     console.log({ people, w: p5.windowWidth });
 
 
@@ -552,7 +601,7 @@ const sketch = p5 => {
 
     setupLogo();
 
-    statCanv = p5.createGraphics(95, p5.height - 100);
+    statCanv = p5.createGraphics(95, p5.height - boardY);
 
     p5.loop();
   }
@@ -567,7 +616,18 @@ const sketch = p5 => {
     const canvasDiv = document.getElementById('myCanvas');
     const width = canvasDiv.offsetWidth;
     spliting = stopSick;
+    p5.frameRate(p5.select('#action-frames').value());
+    // console.log(p5.select('#action-frames').elt.value);
+    // p5.select('#action-frames').elt.value = 15;
+    // console.log(p5.select('#action-frames').elt.value);
 
+    const {
+      red,
+      green,
+      yellow,
+      // blue,
+      white,
+    } = colors;
     //   lifeP.mouseClicked(changeGray);
     // createCanvas(windowWidth, windowHeight - 50);
     console.log('p5.windowWidth', width);
@@ -578,8 +638,23 @@ const sketch = p5 => {
     cnv.parent(p5.select('#myCanvas'));
     // cnv.elt.className ='container';
     // cnv.style('display', 'block');
-    console.log(cnv.elt);
-
+    // console.log(cnv.elt);
+    cnv.mouseReleased(() => {
+      if (finished) return;
+      stopMoving = false;
+    });
+    cnv.mousePressed(() => {
+      if (finished) return;
+      stopMoving = true;
+    });
+    cnv.touchEnded(() => {
+      if (finished) return;
+      stopMoving = false;
+    });
+    cnv.touchStarted(() => {
+      if (finished) return;
+      stopMoving = true;
+    });
     logo.resize(logo.width / 3, logo.height / 3);
     // logoAnim.resize(160, 75);
 
@@ -587,176 +662,56 @@ const sketch = p5 => {
 
     resetSketch();
 
-    const navbar = p5.createDiv('');
-    navbar.parent(canvasDiv);
-    // navbar.elt.className = 'bg-dark d-flex xflex-column justify-content-start align-items-center py-2 px-2';
-    navbar.elt.className = 'bg-dark d-flex flex-column justify-content-start align-items-center py-2 px-2';
+    ccPeople = p5.select('#people-count');
+    ccPeople.elt.value = people.toString();
 
-    const col1 = p5.createDiv('');
-    col1.parent(navbar);
-    // col1.elt.className = 'bg-dark d-flex flex-column justify-content-start align-items-center py-2 px-2';
+    cc3 = p5.select('#action-status');
+    cc4 = p5.select('#action-alert');
 
-
-    ccPeople = p5.createInput(people.toString(), 'number');
-    ccPeople.elt.min = 10;
-    ccPeople.elt.max = 999;
-    ccPeople.elt.className = 'form-control ml-2';
-    ccPeople.elt.style.display = 'inline-block';
-    ccPeople.elt.style.width = '60px';
-    ccPeople.parent(col1);
-
-    const cc2 = p5.createButton('إنحسار');
-    cc2.elt.className = 'btn btn-success';
-    cc2.parent(col1);
+    const cc2 = p5.select('#action-stop-infect');
     cc2.mouseClicked(() => {
       stopSick = true;
-      // alert('clicked');
-      // finshed = false;
       resetSketch();
-      // loop();
     });
 
-    const cc = p5.createButton('إنتشار');
-    cc.elt.className = 'btn btn-danger mr-3 ml-3';
-    cc.parent(col1);
+    const cc = p5.select('#action-stop-sick');
     cc.mouseClicked(() => {
       stopSick = false;
-      // alert('clicked');
-      // finshed = false;
       resetSketch();
-      // loop();
     });
 
     const stopMovingTime = 5;
-    const ccStopMoving = p5.createButton('🤚🏻 حظر تجول');
-    ccStopMoving.elt.className = 'btn btn-primary';
-    ccStopMoving.parent(col1);
-    ccStopMoving.mouseClicked((e) => {
-      stopMoving = !stopMoving;
-      ccStopMoving.elt.className += ' disabled btn-sm';
-      ccStopMoving.elt.disabled = true;
-      ccStopMoving.elt.dataset.counting = 0;
-      ccStopMoving.html(`ممنوع الحركة ${stopMovingTime - ccStopMoving.elt.dataset.counting}`);
-      ccStopMoving.counter = setInterval(() => {
-        ccStopMoving.elt.dataset.counting = parseFloat(ccStopMoving.elt.dataset.counting) + 1;
-        if (parseFloat(ccStopMoving.elt.dataset.counting) === stopMovingTime) {
-          clearInterval(ccStopMoving.counter);
-          ccStopMoving.elt.disabled = false;
-          stopMoving = !stopMoving;
-          ccStopMoving.html('🤚🏻 حظر تجول');
-          ccStopMoving.elt.className = 'btn btn-primary';
-          return;
-        }
-        ccStopMoving.html(`ممنوع الحركة ${stopMovingTime - ccStopMoving.elt.dataset.counting}`);
-      }, 1000);
-      // alert('clicked');
-      // finshed = false;
-      // resetSketch();
-      // loop();
+    const ccStopMoving = p5.select('#action-stop-all');// p5.createButton('🤚🏻 حظر تجول');
+
+    ccStopMoving.mouseReleased(() => {
+      if (finished) return;
+      stopMoving = false;
+    });
+    ccStopMoving.mousePressed(() => {
+      if (finished) return;
+      stopMoving = true;
     });
 
-    const col2 = p5.createDiv('');
-    col2.elt.className = 'd-flex flex-row justify-content-start align-items-center my-3';
-    col2.parent(navbar);
-
-    cc3 = p5.createDiv(`الحالة: ${stopSick ? 'إنحسار' : 'إنتشار'}`);
-    cc3.elt.className = 'text-light';
-    cc3.parent(col2);
-
-
-    cc4 = p5.createDiv('');
-    cc4.elt.className = 'alert alert-danger m-0 mr-2 p-1';
-    // cc4.html('😱لا يوجد غرف');
-    cc4.elt.hidden = true;
-    cc4.parent(col2);
-
-
-    // const cc7 = p5.createDiv('');
-    // // cc7.elt.className = 'mr-auto ';
-    // cc7.elt.className = 'bg-dark d-flex xflex-column justify-content-between align-items-center pb-2 px-2';
-    // cc7.parent(canvasDiv);
-
-    // let cc5 = p5.createDiv(`@ahmader  - version ${VERSION}`);
-    // cc5.elt.className = 'ml-auto small text-muted';
-    // cc5.elt.dir = 'ltr';
-    // // cc5.elt.style.fontSize = '8px';
-    // cc5.parent(cc7);
-
-
-    // const t = p5.createSpan('نصيحة من: ');
-    // t.parent(cc7);
-    // t.elt.className = 'small text-muted ml-1';
-
-    // cc5 = p5.createA('https://talents.sa', 'شركة المواهب الوطنية');
-    // cc5.elt.className = 'text-light';
-    // cc5.elt.style.fontFamily = 'Tahoma';
-    // cc5.elt.dir = 'ltr';
-    // cc5.parent(cc7);
-
-
-    // twitter
-
-    // const divT = p5.createDiv('');
-    // divT.elt.className = 'container d-flex flex-column flex-md-row bg-light';
-
-
-    // const divShare = p5.createDiv('');
-    // divShare.elt.className = 'col-12 col-md-4 text-center py-4';
-    // divShare.parent(divT);
-
-    // let curA = p5.createA(
-    //   'https://twitter.com/intent/tweet?button_hashtag=فهمت_التباعد&ref_src=twsrc%5Etfw',
-    //   'Tweet #فهمت_التباعد2'
-    // );
-    // curA.elt.className = 'twitter-hashtag-button';
-    // curA.elt['data-show-count'] = 'true';
-    // curA.elt.dataset.showCount = true;
-    // curA.elt.dataset.lang = 'ar';
-    // curA.elt.dataset.size = 'large';
-    // curA.parent(divShare);
-
-    // curA = p5.createDiv('---- أو شارك الصفحة ----');
-    // curA.elt.className = 'small my-4';
-    // curA.parent(divShare);
-
-    // const curWhatsapp1 = p5.createA('whatsapp://send?text=https://covid19.talents.sa/', 'WhatsApp');
-    // curWhatsapp1.elt.className = 'btn btn-sm btn-link';
-    // // curWhatsapp.elt.onclick = () => (false);
-    // // curWhatsapp.elt['disabled'] = 'disabled';
-    // curWhatsapp1.parent(divShare);
-
-    // (p5.createElement('br')).parent(divShare);
-
-    // const curWhatsapp = p5.createA('#', 'others...');
-    // curWhatsapp.elt.className = 'btn btn-sm btn-link disabled';
-    // curWhatsapp.elt.disabled = true;
-    // curWhatsapp.elt.dir = 'ltr';
-    // curWhatsapp.elt.onclick = () => (false);
-    // curWhatsapp.parent(divShare);
-
-    // const divLogo = p5.createImg(logoGif, '');
-    // divLogo.elt.className = 'img-fluid';
-    // // const divLogo = logoAnim.createImage(200, 200);
-    // divLogo.parent(divShare);
-
-    // const divWall = p5.createDiv('');
-    // divWall.elt.className = 'col-12 col-md-8';
-    // divWall.parent(divT);
-
-    // const curT = p5.createA(
-    //   'https://twitter.com/TalentsCenter/lists/Covid19?ref_src=twsrc%5Etfw',
-    //   'Tweets by TalentsCenter'
-    // );
-    // curT.elt.className = 'twitter-timeline';
-    // curT.elt['data-show-count'] = 'true';
-    // curT.elt.dataset.showCount = true;
-    // curT.elt.dataset.lang = 'ar';
-    // curT.parent(divWall);
-
-    // const curPost = p5.createElement('script', '');
-    // curPost.elt.async = true;
-    // curPost.elt.src = 'https://platform.twitter.com/widgets.js';
-    // curPost.elt.charset = 'utf-8';
+    // ccStopMoving.mouseClicked(() => {
+    //   stopMoving = !stopMoving;
+    //   ccStopMoving.elt.classList.add('disabled', 'btn-sm');
+    //   ccStopMoving.elt.disabled = true;
+    //   ccStopMoving.elt.dataset.counting = 0;
+    //   ccStopMoving.html(`ممنوع الحركة ${stopMovingTime - ccStopMoving.elt.dataset.counting}`);
+    //   ccStopMoving.counter = setInterval(() => {
+    //     ccStopMoving.elt.dataset.counting = parseFloat(ccStopMoving.elt.dataset.counting) + 1;
+    //     if (parseFloat(ccStopMoving.elt.dataset.counting) === stopMovingTime) {
+    //       clearInterval(ccStopMoving.counter);
+    //       ccStopMoving.elt.disabled = false;
+    //       stopMoving = !stopMoving;
+    //       ccStopMoving.html('🤚🏻 حظر تجول');
+    //       ccStopMoving.elt.classList.remove('disabled', 'btn-sm');
+    //       return;
+    //     }
+    //     ccStopMoving.html(`ممنوع الحركة ${stopMovingTime - ccStopMoving.elt.dataset.counting}`);
+    //   }, 1000);
+    // });
+    p5.noLoop();
   };
 
   p5.draw = () => {
@@ -774,20 +729,23 @@ const sketch = p5 => {
     const infected = particles.filter(e => (e.isInfected)).length;
     const recovered = particles.filter(e => (e.isRecovered)).length;
 
-    cc3.html(`الحالة: ${stopSick ? 'إنحسار' : 'إنتشار'}`);
+    cc3.html(`${stopSick ? 'إنحسار' : 'إنتشار'}`);
 
 
     const {
       red,
       green,
-      // yellow,
-      // blue
+      yellow,
+      // blue,
+      white,
     } = colors;
 
     if (roomsFull) {
       p5.fill(red[0], red[1], red[2]);
+      p5.textSize(60);
+      p5.text('😱', p5.width - 80, p5.height - 80);
       p5.textSize(15);
-      p5.text('😱لا يوجد غرف', p5.width - 95, p5.height - 120);
+      p5.text('لا يوجد غرف', p5.width - 80, p5.height - 35);
       cc4.elt.hidden = false;
       cc4.html('😱لا يوجد غرف');
     } else {
@@ -795,18 +753,6 @@ const sketch = p5 => {
       cc4.html('');
     }
 
-    const boardW = 100;
-    const roomW = 20;
-
-    p5.fill('rgba(255,255,255,0.3)');
-    p5.rect(p5.width - boardW, p5.height - boardW, boardW, boardW);
-    p5.stroke('rgba(0, 255, 0 , .2)');
-    for (let yyy = 0; yyy < 5; yyy++) {
-      for (let xxx = 0; xxx < 5; xxx++) {
-        p5.rect(p5.width - boardW + (roomW * xxx), p5.height - boardW + (roomW * yyy), roomW, roomW);
-      }
-    }
-    // }
 
     if (chart.length > 1) {
       const [oldhealthy, oldsick, oldinfected, oldrecovered] = chart[chart.length - 1];
@@ -823,6 +769,7 @@ const sketch = p5 => {
     const chartH = 50;
     const chartW = chart.length;
 
+    p5.fill('rgba(255,255,255,1)');
     p5.rect(chartY, chartX, chartW, chartH);
     let timeline;
     for (let y = 0; y < chart.length; y++) {
@@ -851,22 +798,45 @@ const sketch = p5 => {
     }
 
     word.map(w => w.display({ timeline }));
-
-    if (recovered !== 0 && infected === 0 && sick === 0) {
-      finished = true;
-      // return;
-      p5.noLoop();
-    }
+    p5.frameRate(p5.select('#action-frames').value());
 
     for (let i = 0; i < particles.length; i++) {
-      // if (i === 1) {
-      //   particles[i].makeSick();
-      // }
       particles[i].createParticle();
       particles[i].joinParticles(particles.slice(i));
       particles[i].moveParticle();
-
     }
+
+
+    if (recovered !== 0 && infected === 0 && sick === 0) {
+      finished = true;
+      // cc3.html(`إنتهى ${stopSick ? 'إنحسار' : 'إنتشار'}`);
+      cc3.html('إنتهت العدوى');
+      p5.fill(`rgba(2, 2, 2, 0.8)`);
+      p5.rect(p5.width / 2 - 150, p5.height / 2, 300, 100);
+      p5.textSize(50);
+      p5.strokeWeight(2);
+      p5.stroke(red[0], red[1], red[2]);
+      p5.fill(yellow[0], yellow[1], yellow[2]);
+      p5.text('إنتهت العدوى', p5.width / 2 - 140, p5.height / 2 + 60);
+      const ccStopMoving = p5.select('#action-stop-all');
+      // ccStopMoving.
+
+      // return;
+      // p5.noLoop();
+    }
+
+    if (stopMoving && !finished) {
+      p5.fill(`rgba(2, 2, 2, 0.8)`);
+      p5.rect(p5.width / 2 - 150, p5.height / 2, 230, 100);
+      p5.textSize(50);
+      p5.strokeWeight(2);
+      p5.stroke(red[0], red[1], red[2]);
+      p5.fill(yellow[0], yellow[1], yellow[2]);
+      p5.text('حظر تجول', p5.width / 2 - 140, p5.height / 2 + 60);
+    } else if (stopMoving && finished) {
+      stopMoving = false;
+    }
+
     doStatus();
     // noLoop();
   };

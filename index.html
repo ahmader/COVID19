@@ -33,24 +33,62 @@
     <body>
         <div id="myCanvas" class="container p-0"></div>
 
-        <div class="container p-0 credit">
-            <div class="bg-dark d-flex xflex-column justify-content-between align-items-center pb-2 px-2">
-                <div class="ml-auto small text-muted" dir="ltr">
-                    version <%=VERSION%>
+        <div class="container p-0">
+            <div id="navbar" class="bg-dark d-flex flex-column justify-content-start align-items-center py-2 px-2">
+                <div class="d-flex" style="min-width:370px;">
+                    <div >
+                        <a class="btn btn-outline-dark text-light" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            <ion-icon name="settings-outline"></ion-icon>
+                            <div class="small">إعدادات</div>
+                          </a>
+                    </div>
+                    <div>
+                        <div>
+                            <div class="collapse" id="collapseExample">
+                                <div class="text-right text-muted">
+                                    <div class="d-flex align-items-top">
+                                        <div>
+                                            <label>التعداد:</label><br>
+                                            <input  id="people-count" pattern="[0-9]*" type="number" min="10" max="999" class="form-control ml-2 d-inline-block" style="width:60px;height:30px;">
+                                        </div>
+                                        <div>
+                                            <label>سرعة الأحداث:</label>
+                                            <input id="action-frames" type="range" min="15" max="60" value="30" dir="ltr" class="slider" id="myRange">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <div  class="text-right">
+                                <button id="action-stop-infect" type="button" class="btn btn-success">إنحسار</button>
+                                <button id="action-stop-sick" type="button" class="btn btn-danger mr-3 ml-3">إنتشار</button>
+                                <button id="action-stop-all" hidden="" type="button" class="btn btn-primary">🤚🏻 حظر تجول</button>
+                            </div>
+                            <div class="d-flex flex-row justify-content-start align-items-center my-3">
+                                <div class="alert p-1 m-0 text-light">الحالة: <span id="action-status">N/A</span></div>
+                                <div x-hidden="true" id="action-alert" class="alert alert-danger m-0 mr-2 p-1">😱 لا يوجد غرف</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <span class="small text-muted ml-1">نصيحة من: </span>
-                <a href="https://talents.sa" class="text-light">شركة المواهب الوطنية</a>
+                
+                
+                
+                <div class="text-muted">اتصل بنا : <span class="email text-light"></span></div>
+            </div>
+    
+            <div class="container p-0 credit">
+                <div class="bg-dark d-flex xflex-column justify-content-between align-items-center pb-2 px-2">
+                    <div class="ml-auto small text-muted" dir="ltr">
+                        version <%=VERSION%>
+                    </div>
+                    <span class="small text-muted ml-1">نصيحة من: </span>
+                    <a href="https://talents.sa" class="text-light">شركة المواهب الوطنية</a>
+                </div>
             </div>
         </div>
-        <!-- 
-            
-
-            cc5 = p5.createA('https://talents.sa', 'شركة المواهب الوطنية');
-            cc5.elt.className = 'text-light';
-            cc5.elt.style.fontFamily = 'Tahoma';
-            cc5.elt.dir = 'ltr';
-            cc5.parent(cc7);
-         -->
+        
 
         <div class="container d-flex flex-column flex-md-row bg-light">
             <div class="col-12 col-md-4 text-center py-4 d-flex flex-column align-items-center">
@@ -94,9 +132,9 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-32584574-8"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-32584574-8');    
+        // window.dataLayer = window.dataLayer || [];
+        // function gtag(){dataLayer.push(arguments);}
+        // gtag('js', new Date());
+        // gtag('config', 'UA-32584574-8');    
     </script>
 </html>

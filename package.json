@@ -1,6 +1,6 @@
 {
   "name": "covid19",
-  "version": "1.5.0",
+  "version": "1.8.0",
   "description": "Showcase for social distance",
   "main": "index.js",
   "repository": "https://github.com/NationalTalentS/COVID19",
@@ -36,6 +36,9 @@
   },
   "dependencies": {
     "bootstrap": "^4.4.1",
-    "p5": "^1.0.0"
+    "jquery": "^3.4.1",
+    "p5": "^1.0.0",
+    "popper.js": "^1.16.1",
+    "punycode": "^2.1.1"
   }
 }

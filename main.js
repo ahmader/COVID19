@@ -2,6 +2,10 @@ import './src/sketch';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
+
+import 'jquery';
+// import '@popperjs/core';
+import 'bootstrap/dist/js/bootstrap';
 // import 'ionicons';
 // require('ionicons');
 
