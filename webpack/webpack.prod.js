@@ -1,3 +1,4 @@
+const webpack = require('webpack'); // to access built-in plugins
 const merge = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
 const common = require('./webpack.common.js');
@@ -29,5 +30,11 @@ module.exports = merge(common, {
       })
     ]
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      IS_PROD: true,
+    }),
+    ...common.plugins,
+  ]
 
 });

@@ -32,7 +32,7 @@ module.exports = {
       VERSION: JSON.stringify(require('../package.json').version),
       APP_TITLE: JSON.stringify('تجربة تفاعلية | المواهب الوطنية'), // JSON.stringify(require('../package.json').name),
       IS_DEV: JSON.stringify(process.env.NODE_ENV !== 'production'),
-      IS_PROD: JSON.stringify(process.env.NODE_ENV === 'production'),
+      IS_PROD: false,
     }),
     new webpack.ProgressPlugin(),
     new CleanWebpackPlugin(),
@@ -40,7 +40,7 @@ module.exports = {
       template: './index.html',
       title: JSON.stringify(require('../package.json').name),
       googleAnalytics: {
-        trackingId: 'UA-XXXX-XX',
+        trackingId: 'UA-32584574-8',
         pageViewOnLoad: true
       },
       meta: [
