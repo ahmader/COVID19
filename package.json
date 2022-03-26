@@ -7,7 +7,7 @@
   "author": "ahmader",
   "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Warning: no test specified\" && exit 0",
     "start": "echo 'Starting Webpack dev server! \n' && webpack-dev-server --config ./webpack/webpack.dev.js",
     "build": "webpack --config ./webpack/webpack.prod.js",
     "deploy": "gh-pages --dist 'dist' --branch 'release'",
