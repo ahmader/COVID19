@@ -1,6 +1,6 @@
 {
   "name": "covid19",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "Showcase for social distance",
   "main": "index.js",
   "repository": "https://github.com/NationalTalentS/COVID19",
