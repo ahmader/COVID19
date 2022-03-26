@@ -1,6 +1,6 @@
 {
   "name": "covid19",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "Showcase for social distance",
   "main": "index.js",
   "repository": "https://github.com/NationalTalentS/COVID19",
@@ -10,6 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "echo 'Starting Webpack dev server! \n' && webpack-dev-server --config ./webpack/webpack.dev.js",
     "build": "webpack --config ./webpack/webpack.prod.js",
+    "deploy": "gh-pages --dist 'dist' --branch 'release'",
     "lint": "eslint ."
   },
   "devDependencies": {
@@ -36,6 +37,7 @@
   },
   "dependencies": {
     "bootstrap": "^4.4.1",
+    "gh-pages": "^3.2.3",
     "jquery": "^3.5.0",
     "p5": "^1.0.0",
     "popper.js": "^1.16.1",
